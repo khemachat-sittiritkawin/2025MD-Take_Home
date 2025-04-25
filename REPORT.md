@@ -2,9 +2,9 @@
 # 📱 แบบฟอร์มส่งงานสอบ Take-home | Take-home Assignment Template
 **ชื่อ - นามสกุล (Full Name):** ```Khemachat Sittiritkawin```  
 **รหัสนักศึกษา (Student ID):** ```6631503005```  
-**ชื่อแอป (App Name):**  
-**Framework ที่ใช้ (Framework Used):** Flutter / React Native / อื่น ๆ  
-**ลิงก์ GitHub Repository:** [ใส่ลิงก์ที่นี่ | Insert link here]  
+**ชื่อแอป (App Name):**   
+**Framework ที่ใช้ (Framework Used):** ```React Native```  
+**ลิงก์ GitHub Repository:** [here](https://github.com/khemachat-sittiritkawin/2025MD-Take_Home.git)   
 **ลิงก์ไฟล์ติดตั้ง (APK/IPA):** [ใส่ลิงก์ที่นี่ | Insert link here]
 
 ---
