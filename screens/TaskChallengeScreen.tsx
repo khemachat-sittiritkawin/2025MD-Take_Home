@@ -1,24 +1,11 @@
-import { FlatList, Modal, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Modal, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import { FontAwesome, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
 import { TaskItem } from '../components/TaskItem';
 import { TimeDisplayer } from '../components/TimeDisplayer';
+import { TaskData } from '../utils';
 
-class TaskData {
-    title: string;
-    timeLeft: number;
-
-    constructor(title: string, timeLeft: number) {
-        this.title = title;
-        this.timeLeft = timeLeft;
-    }
-
-    decrementTime() {
-        this.timeLeft -= 1;
-    }
-}
-
-export default function TaskChallenge() {
+export function TaskChallengeScreen() {
 
     const tasks: TaskData[] = [
         new TaskData("Collect all coins in Level 1", 10),
@@ -74,7 +61,7 @@ export default function TaskChallenge() {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFFBE9' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFBE9' }}>
             <StatusBar />
 
             <Modal
@@ -218,6 +205,6 @@ export default function TaskChallenge() {
                     <Text style={{ fontSize: 30, color: '#FFFBE9' }}>+</Text>
                 </TouchableOpacity>
             </View> */}
-        </View>
+        </SafeAreaView>
     );
 }
