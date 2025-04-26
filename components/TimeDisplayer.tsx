@@ -2,10 +2,8 @@ import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 
 import Checkbox from 'expo-checkbox';
 import { useState } from 'react';
 
-
 interface TimeDisplayerProps {
     seconds: number,
-
 }
 
 export function TimeDisplayer(props: TimeDisplayerProps) {

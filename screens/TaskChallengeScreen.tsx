@@ -62,7 +62,7 @@ export function TaskChallengeScreen() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFBE9' }}>
-            <StatusBar />
+            <StatusBar backgroundColor="#E3CAA5" barStyle="dark-content"/>
 
             <Modal
                 transparent={true}

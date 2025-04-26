@@ -126,6 +126,9 @@ Prompt ที่ใช้:
 
 "How do i add a transparent modal pop-up that shows how much time it took to complete the tasks"
 ผลลัพธ์: AIให้โค้ดเพื่อร่างโครงmodal
+
+"Find a better text color"
+ผลลัพธ์: AIให้โค้ดเพื่อร่างโครงmodal
 ```
 
 ### 5.3 ใช้ AI ช่วยเขียนโค้ด | Code Writing Prompt
@@ -133,6 +136,9 @@ Prompt ที่ใช้:
 Prompt ที่ใช้:  
 "How do i format a single-digit integer to a two-digit string."
 ผลลัพธ์: ได้โค้ดเพื่อformatเลขหนึ่งหลักให้กลายเป็นสองหลัก
+
+"Change status bar's color"
+
 ```
 
 ### 5.4 ใช้ AI ช่วย debug | Debug Prompt
