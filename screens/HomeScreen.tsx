@@ -1,20 +1,61 @@
-import { View, Text, StatusBar, SafeAreaView, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, StatusBar, SafeAreaView, TouchableOpacity, StyleSheet, FlatList } from "react-native";
+import { RootStackParamList } from "../App";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ChallengeData, TaskData } from "../utils";
+import { ChallengeItem } from "../components/ChallengeItem";
 
-export function HomeScreen() {
-    return (<SafeAreaView style={{ flex: 1, backgroundColor: '#FFFBE9', justifyContent: 'center', alignContent: 'center' }}>
-        <StatusBar backgroundColor="#E3CAA5" barStyle="dark-content"/>
-        <View style={{ margin: 20 }}>
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.text}>Browse Challenges</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.text}>Browse Challenges</Text>
-            </TouchableOpacity>
+const mockChallenges = [
+    new ChallengeData("Super RPG Quest 3D", [
+        new TaskData("Collect all coins in Level 1", 10),
+        new TaskData("Defeat the first boss", 45),
+        new TaskData("Complete the underwater level", 25),
+        new TaskData("Find the hidden treasure in Level 3", 1 * 60 + 12),
+        new TaskData("Rescue the cat from the tree", 20),
+        new TaskData("Kill God", 10),
+    ]),
+    new ChallengeData("Space Adventure", [
+        new TaskData("Repair the spaceship", 15),
+        new TaskData("Collect 50 space crystals", 30),
+        new TaskData("Defeat the alien overlord", 50),
+        new TaskData("Navigate through the asteroid field", 20),
+        new TaskData("Rescue the stranded astronaut", 25),
+    ]),
+    new ChallengeData("Mystery Mansion", [
+        new TaskData("Find the hidden key", 10),
+        new TaskData("Solve the riddle in the library", 20),
+        new TaskData("Escape the haunted basement", 35),
+        new TaskData("Uncover the secret passage", 15),
+        new TaskData("Defeat the ghost in the attic", 40),
+    ]),
+    new ChallengeData("Jungle Expedition", [
+        new TaskData("Cross the rope bridge", 10),
+        new TaskData("Find the ancient artifact", 25),
+        new TaskData("Escape the wild animals", 20),
+        new TaskData("Navigate through the dense forest", 30),
+        new TaskData("Climb the tallest tree", 15),
+    ]),
+];
+
+export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParamList>) {
+
+    return (<SafeAreaView style={{ flex: 1, backgroundColor: '#FFFBE9' }}>
+        <StatusBar backgroundColor="#E3CAA5" barStyle="dark-content" />
+        <View style={{ backgroundColor: '#AD8B73', padding: 8, flexDirection: 'row', paddingHorizontal: 13 }}>
+            <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#FFFBE9' }}>Challenges</Text>
+        </View>
+
+        <View style={{ margin: 10 }}>
+            <FlatList
+                data={mockChallenges}
+                renderItem={info => <ChallengeItem data={info.item}/>}
+                keyExtractor={(item, idx) => item.title + idx}
+            />
         </View>
     </SafeAreaView>);
 }
 
 const styles = StyleSheet.create({
-    button: { backgroundColor: '#E3CAA5', padding: 20, borderRadius: 5, marginBottom: 10 },
-    text: { textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: '#5C4033' } // Darker brown for better contrast
+    button: { backgroundColor: '#E3CAA5', padding: 10, borderRadius: 5, marginBottom: 10 },
+    text: { fontSize: 25, fontWeight: 'bold', color: '#5C4033' }, // Darker brown for better contrast
+    infoText: { color: '#5C4033', fontSize: 16, marginRight: 5},
 });

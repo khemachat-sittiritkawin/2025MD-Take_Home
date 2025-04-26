@@ -30,4 +30,11 @@ export class ChallengeData {
         }
         return res;
     }
+
+    calculateAverageTime() {
+        if (this.tasks.length == 0) {
+            return 0;
+        }
+        return this.calculateTotalTime() / this.tasks.length;
+    }
 }

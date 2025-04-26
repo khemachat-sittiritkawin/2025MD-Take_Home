@@ -3,24 +3,34 @@ import { useEffect, useRef, useState } from 'react';
 import { FontAwesome, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
 import { TaskItem } from '../components/TaskItem';
 import { TimeDisplayer } from '../components/TimeDisplayer';
-import { TaskData } from '../utils';
+import { ChallengeData, TaskData } from '../utils';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../App';
+import { useRoute } from '@react-navigation/native';
 
-export function TaskChallengeScreen() {
+export type TaskChallengeScreenProps = {
+    challenge: ChallengeData;
+};
 
-    const tasks: TaskData[] = [
-        new TaskData("Collect all coins in Level 1", 10),
-        new TaskData("Defeat the first boss", 45),
-        new TaskData("Complete the underwater level", 25),
-        new TaskData("Find the hidden treasure in Level 3", 1 * 60 + 12),
-        new TaskData("Rescue the cat from the tree", 20),
-        new TaskData("Kill God", 10),
-    ];
+export function TaskChallengeScreen({ navigation }: NativeStackScreenProps<RootStackParamList>) {
+
+    const route = useRoute();
+    const { challenge } = (route.params as TaskChallengeScreenProps);
+
+    // const tasks: TaskData[] = [
+    //     new TaskData("Collect all coins in Level 1", 10),
+    //     new TaskData("Defeat the first boss", 45),
+    //     new TaskData("Complete the underwater level", 25),
+    //     new TaskData("Find the hidden treasure in Level 3", 1 * 60 + 12),
+    //     new TaskData("Rescue the cat from the tree", 20),
+    //     new TaskData("Kill God", 10),
+    // ];
 
     const [timeTaken, setTimeTaken] = useState(0);
     const [isStarted, setIsStarted] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
     const [isDone, setIsDone] = useState(false);
-    const [taskData, setTaskData] = useState(Array.from(tasks));
+    const [taskData, setTaskData] = useState(Array.from(challenge.tasks));
     const [selectionIndex, setSelectionIndex] = useState(0);
 
     useEffect(() => {
@@ -52,7 +62,7 @@ export function TaskChallengeScreen() {
         setIsStarted(false);
         setIsRunning(false);
         setIsDone(false);
-        setTaskData(Array.from(tasks));
+        setTaskData(Array.from(challenge.tasks));
         setSelectionIndex(0);
     }
 
@@ -62,7 +72,7 @@ export function TaskChallengeScreen() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFBE9' }}>
-            <StatusBar backgroundColor="#E3CAA5" barStyle="dark-content"/>
+            <StatusBar backgroundColor="#E3CAA5" barStyle="dark-content" />
 
             <Modal
                 transparent={true}
@@ -120,7 +130,7 @@ export function TaskChallengeScreen() {
             </Modal>
 
             <View style={{ backgroundColor: '#AD8B73', padding: 8, flexDirection: 'row', paddingHorizontal: 13 }}>
-                <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#FFFBE9' }}>My Tasks</Text>
+                <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#FFFBE9' }}>{challenge.title}</Text>
                 <TimeDisplayer seconds={timeTaken} />
             </View>
 
