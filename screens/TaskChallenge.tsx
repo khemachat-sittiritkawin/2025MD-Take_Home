@@ -1,8 +1,8 @@
 import { FlatList, Modal, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
-import { TaskItem } from './components/TaskItem';
 import { FontAwesome, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
-import { TimeDisplayer } from './components/TimeDisplayer';
+import { TaskItem } from '../components/TaskItem';
+import { TimeDisplayer } from '../components/TimeDisplayer';
 
 class TaskData {
     title: string;
@@ -18,7 +18,7 @@ class TaskData {
     }
 }
 
-export default function App() {
+export default function TaskChallenge() {
 
     const tasks: TaskData[] = [
         new TaskData("Collect all coins in Level 1", 10),
