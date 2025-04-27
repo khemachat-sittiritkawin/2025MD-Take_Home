@@ -50,22 +50,13 @@ export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParam
             <FlatList
                 data={mockChallenges}
                 renderItem={info => <ChallengeItem data={info.item}
-                    onPress={() => {
-                        navigation.navigate("Challenge", { challenge: info.item });
-                        // if (!isSelecting) {
-                        //     navigation.navigate("Challenge", { challenge: info.item });
-                        // } else if (selectionSet.has(info.item)) {
-                        //     selectionSet.delete(info.item);
-                        // } else {
-                        //     selectionSet.add(info.item);
-                        // }
-                        
-                        // updateSelectionState({isSelecting: selectionSet.size > 0, selectionSet});
+                    onPress={() => navigation.navigate("Challenge", { challenge: info.item })}
+                    onEditButtonPressed={() => {
+                        navigation.navigate("Editor", {});
                     }}
-                    // onLongPress={() => {
-                    //     selectionSet.add(info.item);
-                    //     updateSelectionState({isSelecting: selectionSet.size > 0, selectionSet});
-                    // }}
+                    onDeleteButtonPressed={() => {
+
+                    }}
                     selected={selectionSet.has(info.item)}
                 />}
                 keyExtractor={(item, idx) => item.title + idx}

@@ -6,7 +6,7 @@ import { ChallengeData } from "../utils";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-export function ChallengeItem(props: { data: ChallengeData, onPress: () => void, selected: boolean }) {
+export function ChallengeItem(props: { data: ChallengeData, onPress: () => void, onEditButtonPressed: () => void, onDeleteButtonPressed: () => void, selected: boolean }) {
     let nav = useNavigation<NativeStackScreenProps<RootStackParamList>["navigation"]>();
 
     return (<View style={styles.container}>
@@ -24,10 +24,10 @@ export function ChallengeItem(props: { data: ChallengeData, onPress: () => void,
         </TouchableOpacity>
 
         <View style={{ marginHorizontal: 10, justifyContent: 'space-around' }}>
-            <TouchableOpacity style={{ backgroundColor: '#AD8B73', borderRadius: 5}}>
+            <TouchableOpacity style={{ backgroundColor: '#AD8B73', borderRadius: 5 }} onPress={props.onEditButtonPressed}>
                 <MaterialIcons name="edit" size={24} color="#5C4033" />
             </TouchableOpacity>
-            <TouchableOpacity style={{ backgroundColor: '#AD8B73', borderRadius: 5 }}>
+            <TouchableOpacity style={{ backgroundColor: '#AD8B73', borderRadius: 5 }} onPress={props.onDeleteButtonPressed}>
                 <MaterialCommunityIcons name="trash-can" size={24} color="#5C4033" />
             </TouchableOpacity>
         </View>
