@@ -1,8 +1,9 @@
-import { View, Text, StatusBar, SafeAreaView, TouchableOpacity, StyleSheet, FlatList } from "react-native";
+import { View, Text, StatusBar, SafeAreaView, StyleSheet, FlatList } from "react-native";
 import { RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ChallengeData, TaskData } from "../utils";
 import { ChallengeItem } from "../components/ChallengeItem";
+import { useState } from "react";
 
 const mockChallenges = [
     new ChallengeData("Super RPG Quest 3D", [
@@ -37,6 +38,7 @@ const mockChallenges = [
 ];
 
 export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParamList>) {
+    const [{ selectionSet, isSelecting }, updateSelectionState] = useState<{selectionSet: Set<ChallengeData>, isSelecting: boolean}>({ selectionSet: new Set(), isSelecting: false });
 
     return (<SafeAreaView style={{ flex: 1, backgroundColor: '#FFFBE9' }}>
         <StatusBar backgroundColor="#E3CAA5" barStyle="dark-content" />
@@ -47,15 +49,35 @@ export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParam
         <View style={{ margin: 10 }}>
             <FlatList
                 data={mockChallenges}
-                renderItem={info => <ChallengeItem data={info.item}/>}
+                renderItem={info => <ChallengeItem data={info.item}
+                    onPress={() => {
+                        navigation.navigate("Challenge", { challenge: info.item });
+                        // if (!isSelecting) {
+                        //     navigation.navigate("Challenge", { challenge: info.item });
+                        // } else if (selectionSet.has(info.item)) {
+                        //     selectionSet.delete(info.item);
+                        // } else {
+                        //     selectionSet.add(info.item);
+                        // }
+                        
+                        // updateSelectionState({isSelecting: selectionSet.size > 0, selectionSet});
+                    }}
+                    // onLongPress={() => {
+                    //     selectionSet.add(info.item);
+                    //     updateSelectionState({isSelecting: selectionSet.size > 0, selectionSet});
+                    // }}
+                    selected={selectionSet.has(info.item)}
+                />}
                 keyExtractor={(item, idx) => item.title + idx}
             />
         </View>
+
+
     </SafeAreaView>);
 }
 
 const styles = StyleSheet.create({
     button: { backgroundColor: '#E3CAA5', padding: 10, borderRadius: 5, marginBottom: 10 },
     text: { fontSize: 25, fontWeight: 'bold', color: '#5C4033' }, // Darker brown for better contrast
-    infoText: { color: '#5C4033', fontSize: 16, marginRight: 5},
+    infoText: { color: '#5C4033', fontSize: 16, marginRight: 5 },
 });

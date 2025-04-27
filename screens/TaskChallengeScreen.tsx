@@ -1,9 +1,9 @@
-import { FlatList, Modal, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
-import { useEffect, useRef, useState } from 'react';
-import { FontAwesome, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
+import { FlatList, Modal, StatusBar, Text, TouchableOpacity, View, SafeAreaView } from 'react-native';
+import { useEffect, useState } from 'react';
+import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import { TaskItem } from '../components/TaskItem';
 import { TimeDisplayer } from '../components/TimeDisplayer';
-import { ChallengeData, TaskData } from '../utils';
+import { ChallengeData } from '../utils';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 import { useRoute } from '@react-navigation/native';
@@ -17,20 +17,11 @@ export function TaskChallengeScreen({ navigation }: NativeStackScreenProps<RootS
     const route = useRoute();
     const { challenge } = (route.params as TaskChallengeScreenProps);
 
-    // const tasks: TaskData[] = [
-    //     new TaskData("Collect all coins in Level 1", 10),
-    //     new TaskData("Defeat the first boss", 45),
-    //     new TaskData("Complete the underwater level", 25),
-    //     new TaskData("Find the hidden treasure in Level 3", 1 * 60 + 12),
-    //     new TaskData("Rescue the cat from the tree", 20),
-    //     new TaskData("Kill God", 10),
-    // ];
-
     const [timeTaken, setTimeTaken] = useState(0);
     const [isStarted, setIsStarted] = useState(false);
     const [isRunning, setIsRunning] = useState(false);
     const [isDone, setIsDone] = useState(false);
-    const [taskData, setTaskData] = useState(Array.from(challenge.tasks));
+    const [taskData, setTaskData] = useState(challenge.getTasks());
     const [selectionIndex, setSelectionIndex] = useState(0);
 
     useEffect(() => {
@@ -62,7 +53,7 @@ export function TaskChallengeScreen({ navigation }: NativeStackScreenProps<RootS
         setIsStarted(false);
         setIsRunning(false);
         setIsDone(false);
-        setTaskData(Array.from(challenge.tasks));
+        setTaskData(challenge.getTasks());
         setSelectionIndex(0);
     }
 

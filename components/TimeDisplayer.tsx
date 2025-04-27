@@ -1,6 +1,4 @@
-import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Checkbox from 'expo-checkbox';
-import { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
 interface TimeDisplayerProps {
     seconds: number,

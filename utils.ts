@@ -1,4 +1,4 @@
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export class TaskData {
     title: string;
@@ -37,4 +37,21 @@ export class ChallengeData {
         }
         return this.calculateTotalTime() / this.tasks.length;
     }
+
+    getTasks() {
+        let res = [];
+        for (const t of this.tasks) {
+            res.push(new TaskData(t.title, t.timeLeft))
+        }
+        return res;
+    }
+}
+
+export async function saveChallenges(items: ChallengeData[]) {
+    await AsyncStorage.setItem("CHALLENGES", JSON.stringify(items));
+}
+
+export async function loadChallenges(): Promise<ChallengeData[]> {
+    const items = await AsyncStorage.getItem("CHALLENGES");
+    return items ? JSON.parse(items) : [];
 }
