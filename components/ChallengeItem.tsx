@@ -6,11 +6,11 @@ import { ChallengeData } from "../utils";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-export function ChallengeItem(props: { data: ChallengeData, onPress: () => void, onEditButtonPressed: () => void, onDeleteButtonPressed: () => void, selected: boolean }) {
+export function ChallengeItem(props: { data: ChallengeData, onPress: () => void, onEditButtonPressed: () => void, onDeleteButtonPressed: () => void }) {
     let nav = useNavigation<NativeStackScreenProps<RootStackParamList>["navigation"]>();
 
     return (<View style={styles.container}>
-        <TouchableOpacity style={[styles.button, props.selected ? { borderWidth: 4, padding: 10 - 4, borderColor: '#5C4033' } : {}]}
+        <TouchableOpacity style={styles.button}
             onPress={props.onPress}
         >
             <View style={{ flex: 1 }}>

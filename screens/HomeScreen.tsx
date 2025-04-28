@@ -5,6 +5,7 @@ import { ChallengeData, deleteChallenge, loadChallenges, saveChallenges, TaskDat
 import { ChallengeItem } from "../components/ChallengeItem";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const mockChallenges = [
@@ -39,24 +40,74 @@ const mockChallenges = [
     ]),
 ];
 
+async function tryAddDefaultChallenges() {
+    const HAVE_DEFAULT_CHALLENGES = "HAVE_DEFAULT_CHALLENGES";
+    let initted = await AsyncStorage.getItem(HAVE_DEFAULT_CHALLENGES);
+    let challenges = await loadChallenges();
+    if (!initted && challenges.size == 0) {
+        for (const c of mockChallenges) {
+            challenges.set(uuidv4(), c);
+        }
+    }
+    await saveChallenges(challenges);
+    //await AsyncStorage.setItem(HAVE_DEFAULT_CHALLENGES, JSON.stringify("true"));
+}
+
 export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParamList>) {
 
     const [items, setItems] = useState<Map<string, ChallengeData> | undefined>(undefined);
 
-    useEffect(() => {
+    function refreshItems() {
         loadChallenges()
             .then((loadedItems) => {
-                if (loadedItems.size == 0) {
-                    for (const c of mockChallenges) {
-                        loadedItems.set(uuidv4(), c);
-                    }
-                    saveChallenges(loadedItems);
-                }
-                setItems(loadedItems);
-            })
-    }, []);
+                console.log("Reload Items");
+                setItems((prev) => loadedItems);
+            });
+    }
 
-    const [{ selectionSet, isSelecting }, updateSelectionState] = useState<{ selectionSet: Set<ChallengeData>, isSelecting: boolean }>({ selectionSet: new Set(), isSelecting: false });
+    useEffect(() => {
+        if (!items) {
+            tryAddDefaultChallenges().then(() => refreshItems());
+        } else {
+            saveChallenges(items).catch((e) => console.log(e));
+        }
+    }, [items]);
+
+    function ContentView() {
+        if (items === undefined) {
+            return (
+                <View style={styles.centerTextContainer}>
+                    <Text style={styles.centerText}>Loading</Text>
+                </View>
+            );
+        }
+
+        if (items.size === 0) {
+            return (
+                <View style={styles.centerTextContainer}>
+                    <Text style={styles.centerText}>No challenges available. Start by adding a new challenge!</Text>
+                    
+                </View>
+            );
+        }
+
+        return <FlatList
+            data={Array.from(items.entries())}
+            renderItem={({ item }) => <ChallengeItem data={item[1]}
+                onPress={() => navigation.navigate("Challenge", { challenge: item[1] })}
+                onEditButtonPressed={() => {
+                    navigation.navigate("Editor", { data: item[1], saveID: item[0] });
+                }}
+                onDeleteButtonPressed={() => {
+                    console.log("Delt id", item[0]);
+                    deleteChallenge(item[0])
+                        .then(() => refreshItems())
+                        .catch((reason) => console.log(reason));
+                }}
+            />}
+            keyExtractor={(item, idx) => item[1].title + idx}
+        />;
+    }
 
     return (<SafeAreaView style={{ flex: 1, backgroundColor: '#FFFBE9' }}>
         <StatusBar backgroundColor="#E3CAA5" barStyle="dark-content" />
@@ -64,26 +115,8 @@ export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParam
             <Text style={{ fontSize: 25, fontWeight: 'bold', color: '#FFFBE9' }}>Challenges</Text>
         </View>
 
-        <View style={{ margin: 10 }}>
-            {items !== undefined
-                ? <FlatList
-                    data={Array.from(items.entries())}
-                    renderItem={({item}) => <ChallengeItem data={item[1]}
-                        onPress={() => navigation.navigate("Challenge", { challenge: item[1] })}
-                        onEditButtonPressed={() => {
-                            navigation.navigate("Editor", {data: item[1], saveID: item[0]});
-                        }}
-                        onDeleteButtonPressed={() => {
-                            deleteChallenge(item[0]);
-                        }}
-                        selected={selectionSet.has(item[1])}
-                    />}
-                    keyExtractor={(item, idx) => item[1].title + idx}
-                />
-                : <View style={{justifyContent: 'center', alignContent: 'center'}}>
-                    <Text>Loading</Text>
-                </View>
-            }
+        <View style={{ margin: 10, flex: 1 }}>
+            <ContentView />
         </View>
     </SafeAreaView>);
 }
@@ -91,5 +124,7 @@ export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParam
 const styles = StyleSheet.create({
     button: { backgroundColor: '#E3CAA5', padding: 10, borderRadius: 5, marginBottom: 10 },
     text: { fontSize: 25, fontWeight: 'bold', color: '#5C4033' }, // Darker brown for better contrast
+    centerText: { fontSize: 15, textAlign: 'center' },
+    centerTextContainer: { justifyContent: 'center', alignContent: 'center', flex: 1 },
     infoText: { color: '#5C4033', fontSize: 16, marginRight: 5 },
 });

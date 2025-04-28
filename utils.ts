@@ -52,7 +52,8 @@ export class ChallengeData {
 }
 
 export async function saveChallenges(items: Map<string, ChallengeData>) {
-    await AsyncStorage.setItem("CHALLENGES", JSON.stringify(items));
+    const serialized = JSON.stringify(Array.from(items.entries()));
+    await AsyncStorage.setItem("CHALLENGES", serialized);
 }
 
 export async function loadChallenges(): Promise<Map<string, ChallengeData>> {
@@ -60,8 +61,16 @@ export async function loadChallenges(): Promise<Map<string, ChallengeData>> {
     if (!items) {
         return new Map();
     }
+
     const parsed = JSON.parse(items);
-    return new Map(Object.entries(parsed));
+    const challenges = new Map<string, ChallengeData>();
+
+    for (const [key, value] of parsed) {
+        const tasks = value.tasks.map((task: any) => new TaskData(task.title, task.timeLeft));
+        challenges.set(key, new ChallengeData(value.title, tasks));
+    }
+
+    return challenges;
 }
 
 export async function loadChallenge(id: string): Promise<ChallengeData | undefined> {
