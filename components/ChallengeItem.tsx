@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
 
     },
     button: {
-        //backgroundColor: 'green',
         paddingRight: 'auto',
         flexDirection: 'row',
         padding: 10,
