@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import { ChallengeData, saveChallenges, TaskData } from "../utils";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { EditorTask } from "../components/EditorTask";
+import { useRoute } from "@react-navigation/native";
 
 export interface ChallengeEditorScreenProps {
     data: ChallengeData;
@@ -14,8 +15,11 @@ export interface ChallengeEditorScreenProps {
 
 export function ChallengeEditorScreen({ navigation }: NativeStackScreenProps<RootStackParamList>) {
 
-    let [challengeTitle, setChallengeTitle] = useState("No Name");
-    const [tasks, setTasks] = useState<TaskData[]>([]);
+    const route = useRoute();
+    const {data: challengeData, saveID} = (route.params as ChallengeEditorScreenProps);
+
+    let [challengeTitle, setChallengeTitle] = useState(challengeData.title);
+    const [tasks, setTasks] = useState<TaskData[]>(challengeData.tasks);
 
     return <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFBE9' }}>
         <StatusBar backgroundColor="#E3CAA5" barStyle="dark-content" />

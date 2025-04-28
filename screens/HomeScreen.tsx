@@ -1,7 +1,7 @@
 import { View, Text, StatusBar, SafeAreaView, StyleSheet, FlatList } from "react-native";
 import { RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ChallengeData, loadChallenges, saveChallenges, TaskData } from "../utils";
+import { ChallengeData, deleteChallenge, loadChallenges, saveChallenges, TaskData } from "../utils";
 import { ChallengeItem } from "../components/ChallengeItem";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -74,7 +74,7 @@ export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParam
                             navigation.navigate("Editor", {data: item[1], saveID: item[0]});
                         }}
                         onDeleteButtonPressed={() => {
-
+                            deleteChallenge(item[0]);
                         }}
                         selected={selectionSet.has(item[1])}
                     />}

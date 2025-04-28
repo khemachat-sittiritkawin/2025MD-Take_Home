@@ -74,3 +74,9 @@ export async function saveChallenge(data: ChallengeData, id?: string) {
     items.set(id ?? uuidv4(), data);
     await saveChallenges(items);
 }
+
+export async function deleteChallenge(id: string) {
+    let items = await loadChallenges();
+    items.delete(id);
+    await saveChallenges(items);
+}
