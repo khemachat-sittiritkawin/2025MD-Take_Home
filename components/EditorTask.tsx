@@ -1,7 +1,9 @@
 import { FlatList, Modal, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { TimeDisplayer } from "../components/TimeDisplayer";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
+
+
 
 export function EditorTask(props: {
     timeLeft: number,
@@ -18,12 +20,16 @@ export function EditorTask(props: {
     const [isTimeInputVisible, setTimeInputVisible] = useState(false);
 
     const toggleOptions = () => setOptionsVisible(!isOptionsVisible);
-    const toggleTimeInput = () => setTimeInputVisible(!isTimeInputVisible);
+
+    useEffect(() => {
+        console.log("initial value changed");
+    }, [props.timeLeft]);
 
     return (<View style={styles.container}>
         <View style={styles.leftContainer}>
             <TextInput style={styles.textInput} onChangeText={props.onChangeTitle} defaultValue={props.defaultText} />
-            <TouchableOpacity style={styles.timeButton}>
+            <TouchableOpacity style={styles.timeButton} onPress={() => {
+                setTimeInputVisible(true);}}>
                 <TimeDisplayer seconds={props.timeLeft} />
             </TouchableOpacity>
         </View>
@@ -57,8 +63,7 @@ export function EditorTask(props: {
                 </View>
             </TouchableOpacity>
         </Modal>
-        <TimeInputOverlay visible={true} onRequestClose={toggleTimeInput} />
-
+        <TimeInputOverlay initialValue={props.timeLeft} visible={isTimeInputVisible} onRequestClose={() => setTimeInputVisible(false)} onSubmit={(secs) => {props.onChangeTime(secs); setTimeInputVisible(false);}}/>
     </View>);
 }
 
@@ -75,22 +80,26 @@ const useCounter = (
             const next = prev + dir;
 
             if (maxValue !== undefined) {
-                if (next > maxValue && onCarry(false)) return 0; // Reset to 0 if max is exceeded
-                if (next < 0 && onCarry(true)) return maxValue; // Reset to max if below 0
+                if (next > maxValue && onCarry(false)) return 0;
+                if (next < 0 && onCarry(true)) return maxValue;
             }
 
-            return Math.max(0, Math.min(next, maxValue ?? next)); // Clamp value within bounds
+            return Math.max(0, Math.min(next, maxValue ?? next));
         });
     };
 
     return [value, increment];
 };
 
-function TimeInputOverlay(props: { visible: boolean, onRequestClose: () => void }) {
+function TimeInputOverlay(props: { initialValue: number, visible: boolean, onRequestClose: () => void, onSubmit: (seconds: number) => void}) {
 
-    const [seconds, setSeconds] = useState(0);
-    const [minutes, setMinutes] = useState(0);
-    const [hours, setHours] = useState(0);
+    const [hours, incrementHours] = useCounter(() => true, 0, 99);
+    const [minutes, incrementMinutes] = useCounter(() => true, 0, 59);
+    const [seconds, incrementSeconds] = useCounter(() => true, 0, 59);
+
+    useEffect(() => {
+
+    }, [props.initialValue])
 
     return (<Modal
         transparent={true}
@@ -101,19 +110,23 @@ function TimeInputOverlay(props: { visible: boolean, onRequestClose: () => void 
 
         <View style={styles.modalOverlay}>
             <View style={{ backgroundColor: "#FFFBE9", padding: 10, borderRadius: 5, alignContent: 'center' }}>
-                <Text style={{ fontWeight: 'bold', color: "#5C4033", fontSize: 20 }}>Select Time or smth</Text>
-                <View style={{ flexDirection: 'row'}}>
-                    <NumberDigit value={hours} maxValue={99} onStep={(decr) => 
-                        setHours((prev) => Math.min(99, Math.max(0, hours + (decr ? -1 : 1))))
-                    }/>
+                <Text style={{ fontWeight: 'bold', color: "#5C4033", fontSize: 20, textAlign: 'center', marginBottom: 10 }}>Select Time</Text>
+                <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                    <NumberDigit value={hours} maxValue={99} onStep={(decr) => incrementHours(decr)} />
                     <Text style={{ fontWeight: 'bold', color: "#5C4033", fontSize: 60, textAlignVertical: 'center' }}>:</Text>
-                    <NumberDigit value={minutes} maxValue={59} onStep={(decr) => 
-                        setMinutes((prev) => Math.min(59, Math.max(0, minutes + (decr ? -1 : 1))))
-                    }/>
+                    <NumberDigit value={minutes} maxValue={59} onStep={(decr) => incrementMinutes(decr)} />
                     <Text style={{ fontWeight: 'bold', color: "#5C4033", fontSize: 60, textAlignVertical: 'center' }}>:</Text>
-                    <NumberDigit value={seconds} maxValue={59} onStep={(decr) => 
-                        setSeconds((prev) => Math.min(59, Math.max(0, seconds + (decr ? -1 : 1))))
-                    }/>
+                    <NumberDigit value={seconds} maxValue={59} onStep={(decr) => incrementSeconds(decr)} />
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-around'}}>
+                    <TouchableOpacity style={{ backgroundColor: '#AD8B73', borderRadius: 5, padding: 5}} onPress={() => props.onRequestClose()}>
+                        <Text style={{ color: '#FFFBE9', fontSize: 20, textAlign: 'center'}}>Dismiss</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ backgroundColor: '#AD8B73', borderRadius: 5, padding: 5}} onPress={() => {
+                        props.onSubmit(seconds + 60*(minutes + 60*hours))
+                    }}>
+                        <Text style={{ color: '#FFFBE9', fontSize: 20, textAlign: 'center'}}>Submit</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
@@ -150,8 +163,8 @@ function NumberDigit(props: { value: number, maxValue: number, onStep: (decremen
                     width: 60,
                 }}
                 value={String(Math.min(props.value, props.maxValue)).padStart(Math.floor(Math.log10(props.maxValue)) + 1, '0')}
-                editable={false} // Prevent manual editing
-                
+                editable={false}
+
             />
             <TouchableOpacity
                 onPress={() => props.onStep(true)}
@@ -191,7 +204,7 @@ const styles = StyleSheet.create({
     },
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         justifyContent: 'center',
         alignItems: 'center',
     },

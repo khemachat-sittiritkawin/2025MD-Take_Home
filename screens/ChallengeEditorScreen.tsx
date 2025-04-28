@@ -13,13 +13,13 @@ export interface ChallengeEditorScreenProps {
 
 export function ChallengeEditorScreen({ navigation }: NativeStackScreenProps<RootStackParamList>) {
 
-    let challengeTitle = useRef("");
+    let [challengeTitle, setChallengeTitle] = useState("No Name");
     const [tasks, setTasks] = useState<TaskData[]>([]);
 
     return <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFBE9' }}>
         <StatusBar backgroundColor="#E3CAA5" barStyle="dark-content" />
         <View style={{ backgroundColor: '#AD8B73', padding: 8, flexDirection: 'row', paddingHorizontal: 13 }}>
-            <TextInput style={[styles.textField, styles.titleTextField]} onChangeText={(text) => challengeTitle.current = text} />
+            <TextInput style={[styles.textField, styles.titleTextField]} onChangeText={(text) => setChallengeTitle(text)} value={challengeTitle} />
             <View style={{ justifyContent: 'space-around' }}>
                 <TimeDisplayer seconds={0} />
             </View>
@@ -73,14 +73,15 @@ export function ChallengeEditorScreen({ navigation }: NativeStackScreenProps<Roo
                 />}
         />
 
-        <View style={{ position: 'absolute', bottom: 20, right: 20 }}><TouchableOpacity
-            style={styles.buttons}
-            onPress={() => {
+        <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
+            <TouchableOpacity
+                style={styles.buttons}
+                onPress={() => {
 
-            }}
-        >
-            <MaterialIcons name="save" size={24} color='#FFFBE9' />
-        </TouchableOpacity>
+                }}
+            >
+                <MaterialIcons name="save" size={24} color='#FFFBE9' />
+            </TouchableOpacity>
             <TouchableOpacity
                 style={styles.buttons}
                 onPress={() => {

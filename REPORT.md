@@ -139,6 +139,7 @@ Prompt ที่ใช้:
 
 "Change status bar's color"
 
+"How do i make a provider"
 ```
 
 ### 5.4 ใช้ AI ช่วย debug | Debug Prompt
