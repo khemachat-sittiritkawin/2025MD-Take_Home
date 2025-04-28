@@ -1,9 +1,11 @@
 import { View, Text, StatusBar, SafeAreaView, StyleSheet, FlatList } from "react-native";
 import { RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { ChallengeData, TaskData } from "../utils";
+import { ChallengeData, loadChallenges, saveChallenges, TaskData } from "../utils";
 import { ChallengeItem } from "../components/ChallengeItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 
 const mockChallenges = [
     new ChallengeData("Super RPG Quest 3D", [
@@ -38,7 +40,23 @@ const mockChallenges = [
 ];
 
 export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParamList>) {
-    const [{ selectionSet, isSelecting }, updateSelectionState] = useState<{selectionSet: Set<ChallengeData>, isSelecting: boolean}>({ selectionSet: new Set(), isSelecting: false });
+
+    const [items, setItems] = useState<Map<string, ChallengeData> | undefined>(undefined);
+
+    useEffect(() => {
+        loadChallenges()
+            .then((loadedItems) => {
+                if (loadedItems.size == 0) {
+                    for (const c of mockChallenges) {
+                        loadedItems.set(uuidv4(), c);
+                    }
+                    saveChallenges(loadedItems);
+                }
+                setItems(loadedItems);
+            })
+    }, []);
+
+    const [{ selectionSet, isSelecting }, updateSelectionState] = useState<{ selectionSet: Set<ChallengeData>, isSelecting: boolean }>({ selectionSet: new Set(), isSelecting: false });
 
     return (<SafeAreaView style={{ flex: 1, backgroundColor: '#FFFBE9' }}>
         <StatusBar backgroundColor="#E3CAA5" barStyle="dark-content" />
@@ -47,23 +65,26 @@ export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParam
         </View>
 
         <View style={{ margin: 10 }}>
-            <FlatList
-                data={mockChallenges}
-                renderItem={info => <ChallengeItem data={info.item}
-                    onPress={() => navigation.navigate("Challenge", { challenge: info.item })}
-                    onEditButtonPressed={() => {
-                        navigation.navigate("Editor", {});
-                    }}
-                    onDeleteButtonPressed={() => {
+            {items !== undefined
+                ? <FlatList
+                    data={Array.from(items.entries())}
+                    renderItem={({item}) => <ChallengeItem data={item[1]}
+                        onPress={() => navigation.navigate("Challenge", { challenge: item[1] })}
+                        onEditButtonPressed={() => {
+                            navigation.navigate("Editor", {data: item[1], saveID: item[0]});
+                        }}
+                        onDeleteButtonPressed={() => {
 
-                    }}
-                    selected={selectionSet.has(info.item)}
-                />}
-                keyExtractor={(item, idx) => item.title + idx}
-            />
+                        }}
+                        selected={selectionSet.has(item[1])}
+                    />}
+                    keyExtractor={(item, idx) => item[1].title + idx}
+                />
+                : <View style={{justifyContent: 'center', alignContent: 'center'}}>
+                    <Text>Loading</Text>
+                </View>
+            }
         </View>
-
-
     </SafeAreaView>);
 }
 

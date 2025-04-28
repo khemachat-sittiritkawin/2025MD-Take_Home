@@ -1,4 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
+
 
 export class TaskData {
     title: string;
@@ -13,6 +16,7 @@ export class TaskData {
         this.timeLeft -= 1;
     }
 }
+
 
 export class ChallengeData {
     title: string;
@@ -47,11 +51,26 @@ export class ChallengeData {
     }
 }
 
-export async function saveChallenges(items: ChallengeData[]) {
+export async function saveChallenges(items: Map<string, ChallengeData>) {
     await AsyncStorage.setItem("CHALLENGES", JSON.stringify(items));
 }
 
-export async function loadChallenges(): Promise<ChallengeData[]> {
+export async function loadChallenges(): Promise<Map<string, ChallengeData>> {
     const items = await AsyncStorage.getItem("CHALLENGES");
-    return items ? JSON.parse(items) : [];
+    if (!items) {
+        return new Map();
+    }
+    const parsed = JSON.parse(items);
+    return new Map(Object.entries(parsed));
+}
+
+export async function loadChallenge(id: string): Promise<ChallengeData | undefined> {
+    const items = await loadChallenges();
+    return items.get(id);
+}
+
+export async function saveChallenge(data: ChallengeData, id?: string) {
+    let items = await loadChallenges();
+    items.set(id ?? uuidv4(), data);
+    await saveChallenges(items);
 }

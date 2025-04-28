@@ -3,12 +3,13 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../App";
 import { TimeDisplayer } from "../components/TimeDisplayer";
 import { useRef, useState } from "react";
-import { saveChallenges, TaskData } from "../utils";
+import { ChallengeData, saveChallenges, TaskData } from "../utils";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { EditorTask } from "../components/EditorTask";
 
 export interface ChallengeEditorScreenProps {
-
+    data: ChallengeData;
+    saveID: string;
 };
 
 export function ChallengeEditorScreen({ navigation }: NativeStackScreenProps<RootStackParamList>) {
