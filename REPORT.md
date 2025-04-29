@@ -37,7 +37,6 @@ Persona 3:
 ```
 
 ### 1.3 โครงร่างหน้าจอ / Mockup  
-**ใส่รูปภาพ หรือคำอธิบายแต่ละหน้าหลัก 3 หน้า | Attach image or describe 3 main pages**
 ![Home](res/homewchallenges.png)
 ![Home but empty](res/homeempty.png)
 ![Player](res/challenge.png)
@@ -45,7 +44,6 @@ Persona 3:
 ![Editor but empty](res/editorempty.png)
 
 ### 1.4 การไหลของผู้ใช้งาน | User Flow  
-**ตัวอย่าง (Example):**
 ```markdown
 สร้าง challenge: เปิดแอป > กดปุ่ม"+" > กรอกชื่อchallenge > กดปุ่ม"+" > กรอกชื่องาน > เลือกเวลา > กลับไปที่"กดปุ่ม'+'" > กดเครื่องหมายบันทึก
 
@@ -92,7 +90,6 @@ Persona 3:
 - [ ] iOS  
 
 ### 3.3 ไฟล์ README และวิธีติดตั้ง | README & Install Guide  
-**แนบไฟล์หรือคำอธิบายการติดตั้งแอป | Insert steps**
 ```markdown
 1. ดาวน์โหลดไฟล์ .apk
 2. เปิดในอุปกรณ์ Android
@@ -102,8 +99,6 @@ Persona 3:
 ---
 
 ## 4. การสะท้อนผลลัพธ์ | Reflection (2 คะแนน / 2 pts)
-
-**ตัวอย่างหัวข้อ | Suggested points:**
 ```markdown
 - พบปัญหาความแม่นยำของหน่วยของเวลา ซึ่งเป็นสาเหตุที่แอปนี้ไม่มีหน่วยmillisecondในนาฬิกา เพราะว่าหน่วยmillisecondทำให้แอปทำงานช้า เนื่องจากต้องre-render componentอยู่1000รอบต่อวินาที
 - พบปัญหาในการเก็บ/อ่านข้อมูลจากAsyncStorage เนื่องจากข้อมูลJSONที่ได้มาจากAsyncStorageเป็นJSONเปล่าๆ นั่นคือobjectนั้นจะไม่มีmethodsที่ควรมี นี้จึงทำให้การparseข้อมูลจึงยากมากขึ้น ซึ่งวิธีแก้นั่นคือต้องส่งข้อมูลที่อยู่ในobjectเปล่าเป็นargumentในconstructorของclassที่เรากำหนดไว้
