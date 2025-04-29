@@ -69,22 +69,33 @@ export function TaskChallengeScreen({ navigation }: NativeStackScreenProps<RootS
                 transparent={true}
                 visible={isDone}
                 animationType="fade"
-                onRequestClose={() => {/* TODO */ }}
+                onRequestClose={() => onRestart()}
             >
                 <View style={{
                     flex: 1,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Transparent background
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darker transparent background for better focus
                 }}>
                     <View style={{
                         backgroundColor: '#FFFBE9',
-                        padding: 20,
-                        borderRadius: 10,
+                        padding: 30,
+                        borderRadius: 15,
                         alignItems: 'center',
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 4 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 5,
+                        elevation: 10, // For Android shadow
                     }}>
+                        <FontAwesome
+                            name="trophy"
+                            size={50}
+                            color="#AD8B73"
+                            style={{ marginBottom: 15 }}
+                        />
                         <Text style={{
-                            fontSize: 20,
+                            fontSize: 24,
                             fontWeight: 'bold',
                             color: '#AD8B73',
                             marginBottom: 10,
@@ -93,10 +104,9 @@ export function TaskChallengeScreen({ navigation }: NativeStackScreenProps<RootS
                             Congratulations!
                         </Text>
                         <Text style={{
-                            fontSize: 20,
-                            fontWeight: 'bold',
-                            color: '#AD8B73',
-                            marginBottom: 10,
+                            fontSize: 18,
+                            color: '#5C4033',
+                            marginBottom: 20,
                             textAlign: 'center',
                         }}>
                             You completed all tasks in {timeTaken} seconds!
@@ -104,8 +114,9 @@ export function TaskChallengeScreen({ navigation }: NativeStackScreenProps<RootS
                         <TouchableOpacity
                             style={{
                                 backgroundColor: '#AD8B73',
-                                padding: 10,
-                                borderRadius: 5,
+                                paddingVertical: 12,
+                                paddingHorizontal: 25,
+                                borderRadius: 10,
                                 marginTop: 10,
                             }}
                             onPress={onRestart}
@@ -163,12 +174,6 @@ export function TaskChallengeScreen({ navigation }: NativeStackScreenProps<RootS
                     </TouchableOpacity>
                 </View>
 
-                {/* <TouchableOpacity style={{ backgroundColor: '#AD8B73', padding: 15, marginBottom: 5, borderRadius: 5 }}
-                    onPress={() => setIsRunning(!isRunning)}
-                >
-                    <Text style={{ fontSize: 25, textAlign: 'center', color: '#FFFBE9' }}>{isRunning ? "Pause" : "Continue"}</Text>
-                </TouchableOpacity> */}
-
                 <TouchableOpacity style={{ backgroundColor: '#AD8B73', padding: 60, borderRadius: 5 }}
                     onPress={() => {
                         if (isStarted) {
@@ -184,28 +189,6 @@ export function TaskChallengeScreen({ navigation }: NativeStackScreenProps<RootS
                     </Text>
                 </TouchableOpacity>
             </View>
-
-
-
-            {/* <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
-                <TouchableOpacity
-                    style={{
-                        backgroundColor: '#AD8B73',
-                        width: 60,
-                        height: 60,
-                        borderRadius: 30,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.3,
-                        shadowRadius: 3,
-                        elevation: 5,
-                    }}
-                >
-                    <Text style={{ fontSize: 30, color: '#FFFBE9' }}>+</Text>
-                </TouchableOpacity>
-            </View> */}
         </SafeAreaView>
     );
 }

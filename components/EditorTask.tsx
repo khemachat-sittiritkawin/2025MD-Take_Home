@@ -89,8 +89,7 @@ const useCounter = (
     return [value, increment, setValue];
 };
 
-function TimeInputOverlay(props: { initialValue: number, visible: boolean, onRequestClose: () => void, onSubmit: (seconds: number) => void}) {
-
+function TimeInputOverlay(props: { initialValue: number, visible: boolean, onRequestClose: () => void, onSubmit: (seconds: number) => void }) {
     const [hours, incrementHours, setHours] = useCounter(() => true, 0, 99);
     const [minutes, incrementMinutes, setMinutes] = useCounter(() => true, 0, 59);
     const [seconds, incrementSeconds, setSeconds] = useCounter(() => true, 0, 59);
@@ -104,39 +103,37 @@ function TimeInputOverlay(props: { initialValue: number, visible: boolean, onReq
         setHours(() => Math.min(kerty, 99));
     }, [props.initialValue, props.visible]);
 
-    return (<Modal
-        transparent={true}
-        visible={props.visible}
-        animationType="fade"
-        onRequestClose={props.onRequestClose}
-    >
-
-        <View style={styles.modalOverlay}>
-            <View style={{ backgroundColor: "#FFFBE9", padding: 10, borderRadius: 5, alignContent: 'center' }}>
-                <Text style={{ fontWeight: 'bold', color: "#5C4033", fontSize: 20, textAlign: 'center', marginBottom: 10 }}>Select Time</Text>
-                <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                    <NumberDigit value={hours} maxValue={99} onStep={(decr) => incrementHours(decr)} />
-                    <Text style={{ fontWeight: 'bold', color: "#5C4033", fontSize: 60, textAlignVertical: 'center' }}>:</Text>
-                    <NumberDigit value={minutes} maxValue={59} onStep={(decr) => incrementMinutes(decr)} />
-                    <Text style={{ fontWeight: 'bold', color: "#5C4033", fontSize: 60, textAlignVertical: 'center' }}>:</Text>
-                    <NumberDigit value={seconds} maxValue={59} onStep={(decr) => incrementSeconds(decr)} />
-                </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-around'}}>
-                    <TouchableOpacity style={{ backgroundColor: '#AD8B73', borderRadius: 5, padding: 5}} onPress={() => props.onRequestClose()}>
-                        <Text style={{ color: '#FFFBE9', fontSize: 20, textAlign: 'center'}}>Dismiss</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ backgroundColor: '#AD8B73', borderRadius: 5, padding: 5}} onPress={() => {
-                        props.onSubmit(seconds + 60*(minutes + 60*hours))
-                    }}>
-                        <Text style={{ color: '#FFFBE9', fontSize: 20, textAlign: 'center'}}>Submit</Text>
-                    </TouchableOpacity>
+    return (
+        <Modal
+            transparent={true}
+            visible={props.visible}
+            animationType="fade"
+            onRequestClose={props.onRequestClose}
+        >
+            <View style={styles.modalOverlay}>
+                <View style={{ backgroundColor: "#FFFBE9", padding: 20, borderRadius: 10, alignItems: 'center' }}>
+                    <Text style={{ fontWeight: 'bold', color: "#5C4033", fontSize: 20, marginBottom: 20 }}>Select Time</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+                        <NumberDigit value={hours} maxValue={99} onStep={(decr) => incrementHours(decr)} onChange={(val) => setHours(val)} />
+                        <Text style={{ fontWeight: 'bold', color: "#5C4033", fontSize: 60 }}>:</Text>
+                        <NumberDigit value={minutes} maxValue={59} onStep={(decr) => incrementMinutes(decr)} onChange={(val) => setMinutes(val)} />
+                        <Text style={{ fontWeight: 'bold', color: "#5C4033", fontSize: 60 }}>:</Text>
+                        <NumberDigit value={seconds} maxValue={59} onStep={(decr) => incrementSeconds(decr)} onChange={(val) => setSeconds(val)} />
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                        <TouchableOpacity style={{ backgroundColor: '#AD8B73', borderRadius: 5, padding: 10, flex: 1, marginRight: 5 }} onPress={props.onRequestClose}>
+                            <Text style={{ color: '#FFFBE9', fontSize: 20, textAlign: 'center' }}>Dismiss</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ backgroundColor: '#AD8B73', borderRadius: 5, padding: 10, flex: 1, marginLeft: 5 }} onPress={() => props.onSubmit(seconds + 60 * (minutes + 60 * hours))}>
+                            <Text style={{ color: '#FFFBE9', fontSize: 20, textAlign: 'center' }}>Submit</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
-        </View>
-    </Modal>);
+        </Modal>
+    );
 }
-
-function NumberDigit(props: { value: number, maxValue: number, onStep: (decrement: boolean) => void }) {
+function NumberDigit(props: { value: number, maxValue: number, onStep: (decrement: boolean) => void, onChange: (value: number) => void }) {
     return (
         <View style={{ alignItems: 'center', marginHorizontal: 10 }}>
             <TouchableOpacity
@@ -165,9 +162,12 @@ function NumberDigit(props: { value: number, maxValue: number, onStep: (decremen
                     backgroundColor: '#FFFBE9',
                     width: 60,
                 }}
-                value={String(Math.min(props.value, props.maxValue)).padStart(Math.floor(Math.log10(props.maxValue)) + 1, '0')}
-                editable={false}
-
+                value={String(props.value).padStart(2, '0')}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                    const num = Math.min(Math.max(parseInt(text || '0', 10), 0), props.maxValue);
+                    props.onChange(num);
+                }}
             />
             <TouchableOpacity
                 onPress={() => props.onStep(true)}
