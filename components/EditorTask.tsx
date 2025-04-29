@@ -23,10 +23,6 @@ export function EditorTask(props: {
 
     const toggleOptions = () => setOptionsVisible(!isOptionsVisible);
 
-    useEffect(() => {
-        console.log("initial value changed");
-    }, [props.timeLeft]);
-
     return (<View style={styles.container}>
         <View style={styles.leftContainer}>
             <TextInput style={styles.textInput} onChangeText={(s) => {props.onChangeTitle(s); props.onChange();}} defaultValue={props.defaultText} />
@@ -73,7 +69,7 @@ const useCounter = (
     onCarry: (reversed: boolean) => boolean,
     initialValue: number,
     maxValue?: number
-): [number, (reversed?: boolean) => void] => {
+): [number, (reversed?: boolean) => void, (value: React.SetStateAction<number>) => void] => {
     const [value, setValue] = useState(initialValue);
 
     const increment = (reversed?: boolean) => {
@@ -90,18 +86,23 @@ const useCounter = (
         });
     };
 
-    return [value, increment];
+    return [value, increment, setValue];
 };
 
 function TimeInputOverlay(props: { initialValue: number, visible: boolean, onRequestClose: () => void, onSubmit: (seconds: number) => void}) {
 
-    const [hours, incrementHours] = useCounter(() => true, 0, 99);
-    const [minutes, incrementMinutes] = useCounter(() => true, 0, 59);
-    const [seconds, incrementSeconds] = useCounter(() => true, 0, 59);
+    const [hours, incrementHours, setHours] = useCounter(() => true, 0, 99);
+    const [minutes, incrementMinutes, setMinutes] = useCounter(() => true, 0, 59);
+    const [seconds, incrementSeconds, setSeconds] = useCounter(() => true, 0, 59);
 
     useEffect(() => {
-
-    }, [props.initialValue])
+        let kerty = props.initialValue;
+        setSeconds(() => kerty % 60);
+        kerty = Math.floor(kerty / 60);
+        setMinutes(() => kerty % 60);
+        kerty = Math.floor(kerty / 60);
+        setHours(() => Math.min(kerty, 99));
+    }, [props.initialValue, props.visible]);
 
     return (<Modal
         transparent={true}
