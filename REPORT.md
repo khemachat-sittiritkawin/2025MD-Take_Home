@@ -91,7 +91,7 @@ Persona 3:
 
 ### 3.3 ไฟล์ README และวิธีติดตั้ง | README & Install Guide  
 ```markdown
-1. ดาวน์โหลดไฟล์ .apk
+1. ดาวน์โหลดไฟล์ .apk จาก https://github.com/khemachat-sittiritkawin/2025MD-Take_Home/releases/download/release/app-release.apk
 2. เปิดในอุปกรณ์ Android
 3. ติดตั้งผ่าน File Manager
 ```
