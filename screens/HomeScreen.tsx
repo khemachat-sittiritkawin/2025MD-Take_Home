@@ -1,11 +1,12 @@
-import { View, Text, StatusBar, SafeAreaView, StyleSheet, FlatList } from "react-native";
+import { View, Text, StatusBar, SafeAreaView, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { RootStackParamList } from "../App";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ChallengeData, deleteChallenge, loadChallenges, saveChallenges, TaskData } from "../utils";
 import { ChallengeItem } from "../components/ChallengeItem";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 
 const mockChallenges = [
@@ -50,7 +51,7 @@ async function tryAddDefaultChallenges() {
         }
     }
     await saveChallenges(challenges);
-    //await AsyncStorage.setItem(HAVE_DEFAULT_CHALLENGES, JSON.stringify("true"));
+    await AsyncStorage.setItem(HAVE_DEFAULT_CHALLENGES, JSON.stringify(true));
 }
 
 export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParamList>) {
@@ -60,10 +61,13 @@ export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParam
     function refreshItems() {
         loadChallenges()
             .then((loadedItems) => {
-                console.log("Reload Items");
                 setItems((prev) => loadedItems);
             });
     }
+
+    useEffect(() => {
+        tryAddDefaultChallenges().then(() => refreshItems());
+    }, []);
 
     useEffect(() => {
         if (!items) {
@@ -72,6 +76,12 @@ export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParam
             saveChallenges(items).catch((e) => console.log(e));
         }
     }, [items]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            refreshItems();
+        }, [])
+    );
 
     function ContentView() {
         if (items === undefined) {
@@ -86,7 +96,6 @@ export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParam
             return (
                 <View style={styles.centerTextContainer}>
                     <Text style={styles.centerText}>No challenges available. Start by adding a new challenge!</Text>
-                    
                 </View>
             );
         }
@@ -99,7 +108,6 @@ export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParam
                     navigation.navigate("Editor", { data: item[1], saveID: item[0] });
                 }}
                 onDeleteButtonPressed={() => {
-                    console.log("Delt id", item[0]);
                     deleteChallenge(item[0])
                         .then(() => refreshItems())
                         .catch((reason) => console.log(reason));
@@ -118,10 +126,33 @@ export function HomeScreen({ navigation }: NativeStackScreenProps<RootStackParam
         <View style={{ margin: 10, flex: 1 }}>
             <ContentView />
         </View>
+
+        <View style={{ position: 'absolute', bottom: 20, right: 20 }}>
+            <TouchableOpacity
+                style={styles.createButton}
+                onPress={() => navigation.navigate("Editor", { data: new ChallengeData("No Name", []), saveID: uuidv4() })}
+            >
+                <Text style={{ fontSize: 30, color: '#FFFBE9' }}>+</Text>
+            </TouchableOpacity>
+        </View>
     </SafeAreaView>);
 }
 
 const styles = StyleSheet.create({
+    createButton: {
+        backgroundColor: '#AD8B73',
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        elevation: 5,
+        marginBottom: 10,
+    },
     button: { backgroundColor: '#E3CAA5', padding: 10, borderRadius: 5, marginBottom: 10 },
     text: { fontSize: 25, fontWeight: 'bold', color: '#5C4033' }, // Darker brown for better contrast
     centerText: { fontSize: 15, textAlign: 'center' },

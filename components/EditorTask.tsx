@@ -1,13 +1,14 @@
-import { FlatList, Modal, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { TimeDisplayer } from "../components/TimeDisplayer";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 
 
 export function EditorTask(props: {
     timeLeft: number,
     defaultText: string,
+    onChange: () => void,
     onChangeTitle: (val: string) => void,
     onChangeTime: (val: number) => void,
     onAddAbove: () => void,
@@ -15,6 +16,7 @@ export function EditorTask(props: {
     onMoveUp: () => void,
     onMoveDown: () => void,
     onDelete: () => void,
+
 }) {
     const [isOptionsVisible, setOptionsVisible] = useState(false);
     const [isTimeInputVisible, setTimeInputVisible] = useState(false);
@@ -27,7 +29,7 @@ export function EditorTask(props: {
 
     return (<View style={styles.container}>
         <View style={styles.leftContainer}>
-            <TextInput style={styles.textInput} onChangeText={props.onChangeTitle} defaultValue={props.defaultText} />
+            <TextInput style={styles.textInput} onChangeText={(s) => {props.onChangeTitle(s); props.onChange();}} defaultValue={props.defaultText} />
             <TouchableOpacity style={styles.timeButton} onPress={() => {
                 setTimeInputVisible(true);}}>
                 <TimeDisplayer seconds={props.timeLeft} />
@@ -45,25 +47,25 @@ export function EditorTask(props: {
         >
             <TouchableOpacity style={styles.modalOverlay} onPress={toggleOptions}>
                 <View style={styles.optionsWidget}>
-                    <TouchableOpacity style={styles.optionButton} onPress={() => { props.onAddAbove(); setOptionsVisible(false); }}>
+                    <TouchableOpacity style={styles.optionButton} onPress={() => { props.onAddAbove(); props.onChange(); setOptionsVisible(false); }}>
                         <Text style={styles.optionText}>Add Above</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.optionButton} onPress={() => { props.onAddBelow(); setOptionsVisible(false); }}>
+                    <TouchableOpacity style={styles.optionButton} onPress={() => { props.onAddBelow(); props.onChange(); setOptionsVisible(false); }}>
                         <Text style={styles.optionText}>Add Below</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.optionButton} onPress={() => { props.onMoveUp(); setOptionsVisible(false); }}>
+                    <TouchableOpacity style={styles.optionButton} onPress={() => { props.onMoveUp(); props.onChange(); setOptionsVisible(false); }}>
                         <Text style={styles.optionText}>Move Up</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.optionButton} onPress={() => { props.onMoveDown(); setOptionsVisible(false); }}>
+                    <TouchableOpacity style={styles.optionButton} onPress={() => { props.onMoveDown(); props.onChange(); setOptionsVisible(false); }}>
                         <Text style={styles.optionText}>Move Down</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.optionButton, { borderBottomWidth: 0 }]} onPress={() => { props.onDelete(); setOptionsVisible(false); }}>
+                    <TouchableOpacity style={[styles.optionButton, { borderBottomWidth: 0 }]} onPress={() => { props.onDelete(); props.onChange(); setOptionsVisible(false); }}>
                         <Text style={styles.optionText}>Delete</Text>
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>
         </Modal>
-        <TimeInputOverlay initialValue={props.timeLeft} visible={isTimeInputVisible} onRequestClose={() => setTimeInputVisible(false)} onSubmit={(secs) => {props.onChangeTime(secs); setTimeInputVisible(false);}}/>
+        <TimeInputOverlay initialValue={props.timeLeft} visible={isTimeInputVisible} onRequestClose={() => setTimeInputVisible(false)} onSubmit={(secs) => {props.onChangeTime(secs); props.onChange(); setTimeInputVisible(false);}}/>
     </View>);
 }
 

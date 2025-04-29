@@ -138,8 +138,15 @@ Prompt ที่ใช้:
 ผลลัพธ์: ได้โค้ดเพื่อformatเลขหนึ่งหลักให้กลายเป็นสองหลัก
 
 "Change status bar's color"
+ผลลัพธ์: AIแก้สีของStatusBarเพื่อให้กลมกลื่นกับแอป
 
 "How do i make a provider"
+ผลลัพธ์: AIสอนวิธีการใช้ฟีเจอร์Providerของreact
+
+"How do I make the screen to call the refreshItems function when I navigate back to it"
+ผลลัพธ์: AIใช้useFocusEffectกับuseCallbackเพื่อเรียกฟังก์ชั้นrefreshItemsเพื่อจัดเรียงรายการอีกรอบ
+
+
 ```
 
 ### 5.4 ใช้ AI ช่วย debug | Debug Prompt
