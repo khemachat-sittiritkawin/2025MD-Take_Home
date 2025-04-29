@@ -4,7 +4,7 @@
 **ชื่อแอป (App Name):** ```GoalForge```    
 **Framework ที่ใช้ (Framework Used):** ```React Native```  
 **ลิงก์ GitHub Repository:** [here](https://github.com/khemachat-sittiritkawin/2025MD-Take_Home.git)   
-**ลิงก์ไฟล์ติดตั้ง (APK/IPA):** [ใส่ลิงก์ที่นี่ | Insert link here]
+**ลิงก์ไฟล์ติดตั้ง (APK/IPA):** [here](https://github.com/khemachat-sittiritkawin/2025MD-Take_Home/releases/download/release/app-release.apk)
 
 ---
 
