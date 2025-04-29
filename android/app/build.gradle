@@ -95,6 +95,12 @@ android {
         versionName "1.0.0"
     }
     signingConfigs {
+        release {
+            storeFile file('goalforge.keystore')
+            storePassword System.getenv("GOALFORGE_STORE_PASSWORD")
+            keyAlias 'androidreleasekey'
+            keyPassword System.getenv("GOALFORGE_KEY_PASSWORD")
+        }
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
